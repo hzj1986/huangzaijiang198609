@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M3U8 Video Player with Hls.js</title>
+    <style>
+        /* 样式 */
+        video {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+        }
+        button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 视频播放器 -->
+<video id="videoPlayer" controls></video>
+
+<!-- 播放按钮 -->
+<button id="playButton">播放</button>
+
+<!-- 引入Hls.js库 -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+    // M3U8播放列表的URL
+    var m3u8Url = 'https://m.lasi.fun/ff/m3u8s/66/666f7d2d3111771188f3a3da0c924049.m3u8';
+
+    // 初始化视频和Hls实例
+    var video = document.getElementById('videoPlayer');
+    if(Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource(m3u8Url);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            video.play();
+        });
+    }
+    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = m3u8Url;
+        video.addEventListener('loadedmetadata', function() {
+            video.play();
+        });
+    }
+
+    // 播放按钮事件监听
+    document.getElementById('playButton').addEventListener('click', function() {
+        if (video.paused || video.currentTime <= 0) {
+            video.play();
+        }
+    });
+</script>
+
+</body>
+</html>
